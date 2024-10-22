@@ -20,6 +20,9 @@ int8_t r, c;
 
 // Initialize the game logic.
 void game_init(void) {
+    while (com_read(NULL, 1) > 0) {
+        // Clear the input buffer
+    }
     state = init_st;
 }
 
@@ -34,15 +37,32 @@ void game_tick(void) {
             state = wait_mark_st;
             break;
         case wait_mark_st:
+        uint8_t buffer[1];
             // Wait for a mark (Button A press) from a player
             if (!pin_get_level(HW_BTN_A)) {
                 // Get the navigator location
                 nav_get_loc(&r, &c);
                 // Check if the location is valid
                 if (board_get(r, c) == no_m) {
+                    // encode r and c into a single byte and send it to connected uart device
+                    uint8_t rc = (r << 4) | c;
+                    com_write(&rc, 1);
+                    // If so, set mark on board and transition to mark_st
+                    state = mark_st;
+                    break;
+                }
+            } 
+            
+            if (com_read(buffer, 1) > 0) {
+                // decode r and c from the received byte
+                r = ((uint8_t)buffer[0] & 0xF0) >> 4;
+                c = (uint8_t)buffer[0] & 0x0F;
+                // Check if the location is valid
+                if (board_get(r, c) == no_m) {
                     // If so, set mark on board and transition to mark_st
                     state = mark_st;
                 }
+
             }
             break;
         case mark_st:
