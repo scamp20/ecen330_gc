@@ -6,6 +6,9 @@
 #include "graphics.h"
 #include "lcd.h"
 #include "config.h"
+#include "com.h"
+
+#define NIBBLE 4
 
 typedef enum {
     init_st,
@@ -20,9 +23,6 @@ int8_t r, c;
 
 // Initialize the game logic.
 void game_init(void) {
-    while (com_read(NULL, 1) > 0) {
-        // Clear the input buffer
-    }
     state = init_st;
 }
 
@@ -45,13 +45,13 @@ void game_tick(void) {
                 // Check if the location is valid
                 if (board_get(r, c) == no_m) {
                     // encode r and c into a single byte and send it to connected uart device
-                    uint8_t rc = (r << 4) | c;
+                    uint8_t rc = (r << NIBBLE) | c;
                     com_write(&rc, 1);
                     // If so, set mark on board and transition to mark_st
                     state = mark_st;
                     break;
                 }
-            } 
+            }
             
             if (com_read(buffer, 1) > 0) {
                 // decode r and c from the received byte
@@ -115,6 +115,11 @@ void game_tick(void) {
         case init_st:
             break;
         case new_game_st:
+            uint8_t temp[1];
+            while (com_read(temp, 1) > 0) {
+                // Clear the input buffer
+            }
+
             // Draw game background and grid on the display
             lcd_fillScreen(CONFIG_BACK_CLR);
             graphics_drawGrid(CONFIG_GRID_CLR);

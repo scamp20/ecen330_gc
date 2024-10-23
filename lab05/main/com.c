@@ -2,10 +2,13 @@
 #define COM_H_
 
 #include <stdint.h>
+#include <string.h>
 #include <driver/uart.h>
 #include "hw.h"
 #include "pin.h"
 #include "com.h"
+
+#define BAUD_RATE 115200
 
 // This component is a wrapper around a lower-level communication
 // method such as a serial port (UART), Bluetooth, or WiFi. The
@@ -17,12 +20,12 @@
 // Return zero if successful, or non-zero otherwise.
 int32_t com_init(void) {
     uart_config_t uart_config = {
-        .baud_rate = 115200,
+        .baud_rate = BAUD_RATE,
         .data_bits = UART_DATA_8_BITS,
         .parity = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
-        .source_clk = UART_SCLK_DEFAULT;
+        .source_clk = UART_SCLK_DEFAULT,
     };
     // Configure UART parameters
     ESP_ERROR_CHECK(uart_param_config(UART_NUM_2, &uart_config));
@@ -40,7 +43,7 @@ int32_t com_init(void) {
 // Free resources used for communication.
 // Return zero if successful, or non-zero otherwise.
 int32_t com_deinit(void) {
-    if (uart_is_driver_installed()) {
+    if (uart_is_driver_installed(UART_NUM_2)) {
         // Uninstall UART driver
         ESP_ERROR_CHECK(uart_driver_delete(UART_NUM_2));
     }
@@ -52,8 +55,7 @@ int32_t com_deinit(void) {
 // size: size of data in bytes to write
 // Return number of bytes written, or negative number if error.
 int32_t com_write(const void *buf, uint32_t size) {
-    int32_t written = uart_tx_chars(UART_NUM_2, (const char*)buf, strlen((const char*)buf));
-    ESP_ERROR_CHECK(written);
+    int32_t written = uart_tx_chars(UART_NUM_2, (const char*)buf, size);
     return written;
 }
 
@@ -63,7 +65,6 @@ int32_t com_write(const void *buf, uint32_t size) {
 // Return number of bytes read, or negative number if error.
 int32_t com_read(void *buf, uint32_t size) {
     int32_t read = uart_read_bytes(UART_NUM_2, buf, size, 0);
-    ESP_ERROR_CHECK(read);
     return read;
 }
 
