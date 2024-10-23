@@ -9,6 +9,8 @@
 #include "com.h"
 
 #define NIBBLE 4
+#define LEFT_NIBBLE 0xF0
+#define RIGHT_NIBBLE 0x0F
 
 typedef enum {
     init_st,
@@ -55,8 +57,8 @@ void game_tick(void) {
             
             if (com_read(buffer, 1) > 0) {
                 // decode r and c from the received byte
-                r = ((uint8_t)buffer[0] & 0xF0) >> 4;
-                c = (uint8_t)buffer[0] & 0x0F;
+                r = ((uint8_t)buffer[0] & LEFT_NIBBLE) >> NIBBLE;
+                c = (uint8_t)buffer[0] & RIGHT_NIBBLE;
                 // Check if the location is valid
                 if (board_get(r, c) == no_m) {
                     // If so, set mark on board and transition to mark_st
