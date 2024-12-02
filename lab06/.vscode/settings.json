@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "plane.h": "c",
+        "missile.h": "c"
+    }
+}

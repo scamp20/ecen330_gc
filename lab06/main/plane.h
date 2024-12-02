@@ -3,6 +3,20 @@
 
 #include "missile.h"
 
+// Plane
+typedef struct {
+	// state and idle timeout
+    int32_t currentState;
+    float timeout;
+
+	// plane's missile
+    missile_t* missile;
+
+	// plane position
+	coord_t x_position;
+
+} plane_t;
+
 /******************** Plane Init Function ********************/
 
 // Initialize the plane state machine. Pass a pointer to the missile
