@@ -29,7 +29,7 @@ void graphics_drawMessage(const char *str, color_t color, color_t bg);
  * @param c     Column grid location.
  * @param color Color value.
  */
-void graphics_drawX(int8_t r, int8_t c, color_t color);
+void graphics_draw_red(int8_t r, int8_t c, color_t color);
 
 /**
  * @brief Draw an O at the specified location.
@@ -37,7 +37,7 @@ void graphics_drawX(int8_t r, int8_t c, color_t color);
  * @param c     Column grid location.
  * @param color Color value.
  */
-void graphics_drawO(int8_t r, int8_t c, color_t color);
+void graphics_draw_yellow(int8_t r, int8_t c, color_t color);
 
 /**
  * @brief Draw a box to highlight the specified location.
@@ -45,6 +45,6 @@ void graphics_drawO(int8_t r, int8_t c, color_t color);
  * @param c     Column grid location.
  * @param color Color value.
  */
-void graphics_drawHighlight(int8_t r, int8_t c, color_t color);
+void graphics_drawHighlight(int8_t c, color_t color);
 
 #endif // GRAPHICS_H_

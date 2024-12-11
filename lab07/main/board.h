@@ -16,8 +16,11 @@ void board_clear(void);
 // Get mark at board location
 mark_t board_get(int8_t r, int8_t c);
 
+// Check if column is full
+bool column_valid(int8_t c);
+
 // If location empty, set the mark and return true, otherwise return false.
-bool board_set(int8_t r, int8_t c, mark_t mark);
+int16_t board_drop(int8_t c, mark_t mark);
 
 // Check if mark type is a winner.
 bool board_winner(mark_t mark);

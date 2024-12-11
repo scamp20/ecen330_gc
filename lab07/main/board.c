@@ -1,5 +1,6 @@
 #include "board.h"
 #include "config.h"
+// #include <stdio.h>
 
 #define BOARD_R CONFIG_BOARD_R // Rows
 #define BOARD_C CONFIG_BOARD_C // Columns
@@ -25,14 +26,27 @@ mark_t board_get(int8_t r, int8_t c)
 	return board[r][c];
 }
 
+bool column_valid(int8_t c) {
+	for (int r = BOARD_R - 1; r >= 0; r--) {
+		if (board[r][c] == no_m) {
+			return true;
+		}
+	}
+	return false;
+}
+
 // If location empty, set the mark and return true, otherwise return false.
-bool board_set(int8_t r, int8_t c, mark_t mark)
+int16_t board_drop(int8_t c, mark_t mark)
 {
-	if (board[r][c] == no_m) {
-		board[r][c] = mark;
-		mark_count++;
-		return true;
-	} else return false;
+	for (int r = BOARD_R - 1; r >= 0; r--) {
+		if (board[r][c] == no_m) {
+			// printf("Dropping mark at [%d, %d]\n", r, c);
+			board[r][c] = mark;
+			mark_count++;
+			return r;
+		}
+	}
+	return -1;
 }
 
 // Check if mark type is a winner.

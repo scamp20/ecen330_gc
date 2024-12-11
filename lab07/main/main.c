@@ -3,6 +3,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
+#include "esp_timer.h"
 
 static const char *TAG = "lab07";
 
@@ -93,10 +94,10 @@ void app_main(void)
 		nav_get_loc(&r, &c);
 		static int8_t lr = -1, lc = -1;
 		if (r != lr || c != lc) {
-			graphics_drawHighlight(lr,  lc, CONFIG_BACK_CLR);
+			graphics_drawHighlight(lc, CONFIG_BACK_CLR);
 			lr = r; lc = c;
 		}
-		graphics_drawHighlight(r, c, CONFIG_HIGH_CLR);
+		graphics_drawHighlight(c, CONFIG_HIGH_CLR);
 		t2 = esp_timer_get_time() - t1;
 		if (t2 > tmax) tmax = t2;
 	}

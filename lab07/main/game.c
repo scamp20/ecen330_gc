@@ -44,8 +44,8 @@ void game_tick(void) {
             if (!pin_get_level(HW_BTN_A)) {
                 // Get the navigator location
                 nav_get_loc(&r, &c);
-                // Check if the location is valid
-                if (board_get(r, c) == no_m) {
+                // Check if the column is valid
+                if (column_valid(c)) {
                     // encode r and c into a single byte and send it to connected uart device
                     uint8_t rc = (r << NIBBLE) | c;
                     com_write(&rc, 1);
@@ -57,10 +57,10 @@ void game_tick(void) {
             
             if (com_read(buffer, 1) > 0) {
                 // decode r and c from the received byte
-                r = ((uint8_t)buffer[0] & LEFT_NIBBLE) >> NIBBLE;
+                // r = ((uint8_t)buffer[0] & LEFT_NIBBLE) >> NIBBLE;
                 c = (uint8_t)buffer[0] & RIGHT_NIBBLE;
                 // Check if the location is valid
-                if (board_get(r, c) == no_m) {
+                if (column_valid(c)) {
                     // If so, set mark on board and transition to mark_st
                     state = mark_st;
                 }
@@ -141,11 +141,11 @@ void game_tick(void) {
         case mark_st:
             // Draw an X or O on the display
             if (x_turn) {
-                board_set(r, c, R_m);
-                graphics_drawX(r, c, CONFIG_MARK_CLR);
+                r = board_drop(c, R_m);
+                graphics_draw_red(r, c, CONFIG_MARK_CLR);
             } else {
-                board_set(r, c, Y_m);
-                graphics_drawO(r, c, CONFIG_MARK_CLR);
+                r = board_drop(c, Y_m);
+                graphics_draw_yellow(r, c, CONFIG_MARK_CLR);
             }
             // Next player's turn
             x_turn = !x_turn;
