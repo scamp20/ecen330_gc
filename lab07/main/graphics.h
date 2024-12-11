@@ -24,20 +24,12 @@ void graphics_drawGrid(color_t color);
 void graphics_drawMessage(const char *str, color_t color, color_t bg);
 
 /**
- * @brief Draw an X at the specified location.
+ * @brief Draw a filled circle at the specified location.
  * @param r     Row grid location.
  * @param c     Column grid location.
  * @param color Color value.
  */
-void graphics_draw_red(int8_t r, int8_t c, color_t color);
-
-/**
- * @brief Draw an O at the specified location.
- * @param r     Row grid location.
- * @param c     Column grid location.
- * @param color Color value.
- */
-void graphics_draw_yellow(int8_t r, int8_t c, color_t color);
+void graphics_draw_circle(int8_t r, int8_t c, color_t color);
 
 /**
  * @brief Draw a box to highlight the specified location.
@@ -46,5 +38,7 @@ void graphics_draw_yellow(int8_t r, int8_t c, color_t color);
  * @param color Color value.
  */
 void graphics_drawHighlight(int8_t c, color_t color);
+
+void graphics_draw_player_selection_display();
 
 #endif // GRAPHICS_H_
